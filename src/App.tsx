@@ -150,14 +150,14 @@ useEffect(() => {
         <img src="/pupa-coin-desktop.c108aeaf.gif" className="pupa-coin-img" alt="Pupa Coin" />
       </div>
 
+      <div id="fire-container"></div>
+
       <footer className="footer-links">
         <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">Terms of Service</a>
         <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
         <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">Your California Privacy Rights</a>
         <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">About Ads</a>
       </footer>
-
-      <div id="fire-container"></div>
     </div>
   );
 }
