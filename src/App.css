@@ -8,7 +8,7 @@
 
 body {
   margin: 0;
-  background-color: #000000;
+  background-color: #100325;
   background-image: url('/public/stars-seamless.edcef73f.png');
   background-repeat: repeat;
   color: white;
@@ -254,4 +254,30 @@ body {
   transform: translateY(-50%); 
   width: 200px;
   z-index: 10;
+}
+
+.footer-links {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #000;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  z-index: 1000;
+  border-top: 2px solid #ffff00;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  font-family: monospace;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #ffff00;
 }

@@ -23,15 +23,13 @@ useEffect(() => {
       const { data } = await api.get("/");
       const currentData = Array.isArray(data) ? data[0] : data;
       
-      // Obtener el texto completo
       let fullText = currentData.wisdom || currentData.text || currentData.lesson || "...";
       
-      // Separar el número del texto si viene en formato "123.texto"
       const match = fullText.match(/^(\d+)\.\s*(.+)$/);
       
       if (match) {
-        setLessonId(match[1]); // El número
-        setWisdom(match[2]);   // El texto sin el número
+        setLessonId(match[1]); 
+        setWisdom(match[2]);  
       } else {
         setWisdom(fullText);
         setLessonId(currentData.id || currentData.number || Math.floor(Math.random() * 100).toString());
@@ -78,7 +76,7 @@ useEffect(() => {
 
       {showPrivateImage && (
         <div className="secret-image-overlay" onClick={() => setShowPrivateImage(false)}>
-          <img src="/broken-image-icon.92d4496e.png" alt="Secret Pupa" style={{width: '300px', backgroundColor: 'white'}} />
+          <img src="public/pupa-private-image.5bdbbbc6.jpg" alt="Secret Pupa" style={{width: '300px', backgroundColor: 'white'}} />
           <div className="close-btn">X</div>
         </div>
       )}
@@ -151,6 +149,13 @@ useEffect(() => {
         <img src="/bad-gateway.f924a563.png" className="bad-gateway-img" alt="420 Bad Gateway" />
         <img src="/pupa-coin-desktop.c108aeaf.gif" className="pupa-coin-img" alt="Pupa Coin" />
       </div>
+
+      <footer className="footer-links">
+        <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+        <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+        <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">Your California Privacy Rights</a>
+        <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">About Ads</a>
+      </footer>
 
       <div id="fire-container"></div>
     </div>
