@@ -1,23 +1,70 @@
-import { useState } from 'react';
-import { getRandomLesson } from './api/api';
-import type { Lesson } from './api/api';
+import { useState, useEffect } from 'react';
+import { api } from './api/api'; 
 import './App.css';
 
 function App() {
-  const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
   const [showPrivateImage, setShowPrivateImage] = useState<boolean>(false);
 
-  const fetchNewLesson = async () => {
-    setLoading(true);
-    const data = await getRandomLesson();
-    if (data) {
-      setLesson(data);
+  const [wisdom, setWisdom] = useState("");
+  const [lessonId, setLessonId] = useState("??");
+  const [spinning, setSpinning] = useState(false);
+  const [speed, setSpeed] = useState(200); 
+  
+  const [showShare, setShowShare] = useState(false);
+
+useEffect(() => {
+  if (!spinning) return;
+
+  const stopTime = 1500 + Math.random() * 2000;
+  const startTime = Date.now();
+
+  const tick = async () => {
+    try {
+      const { data } = await api.get("/");
+      const currentData = Array.isArray(data) ? data[0] : data;
+      
+      // Obtener el texto completo
+      let fullText = currentData.wisdom || currentData.text || currentData.lesson || "...";
+      
+      // Separar el número del texto si viene en formato "123.texto"
+      const match = fullText.match(/^(\d+)\.\s*(.+)$/);
+      
+      if (match) {
+        setLessonId(match[1]); // El número
+        setWisdom(match[2]);   // El texto sin el número
+      } else {
+        setWisdom(fullText);
+        setLessonId(currentData.id || currentData.number || Math.floor(Math.random() * 100).toString());
+      }
+
+    } catch (error) {
+      console.error("Error al cargar:", error);
+      setWisdom("The web server is temporary overloaded...");
     }
-    setLoading(false);
+
+    const elapsed = Date.now() - startTime;
+
+    if (elapsed < stopTime) {
+      setTimeout(tick, speed);
+    } else {
+      setSpinning(false);
+      setSpeed(200); 
+      
+      setShowShare(Math.random() > 0.7); 
+    }
   };
 
-  const lessonText = lesson?.lesson || lesson?.text || "";
+  tick();
+}, [spinning, speed]);
+
+  const handleClick = () => {
+    if (!spinning) {
+      setSpinning(true);
+      setShowShare(false); 
+    } else {
+      setSpeed((prev) => Math.max(40, prev - 40));
+    }
+  };
 
   return (
     <div id="app">
@@ -31,7 +78,7 @@ function App() {
 
       {showPrivateImage && (
         <div className="secret-image-overlay" onClick={() => setShowPrivateImage(false)}>
-          <img src="/public/pupa-private-image.5bdbbbc6.jpg" alt="Secret Pupa" />
+          <img src="/broken-image-icon.92d4496e.png" alt="Secret Pupa" style={{width: '300px', backgroundColor: 'white'}} />
           <div className="close-btn">X</div>
         </div>
       )}
@@ -48,41 +95,44 @@ function App() {
           <div className="korvo-ad-box">
             <img src="/korvo-ad-car-flash-desktop.68ee3696.png" className="ad-flash" alt="Buy Korvo's Car!" />
             <img src="/rainbow-arrow.01646803.gif" className="ad-arrow" alt="Arrow" />
-            <img src="/car-sold-desktop.77eb8a85.png" className="ad-car" alt="Sold Car" />
+            <div className="car-container" style={{ position: 'relative', width: '110%' }}>
+              <img src="/car-sold-desktop.77eb8a85.png" className="ad-car" style={{ width: '100%' }} alt="Sold Car" />
+            </div>
           </div>
         </aside>
 
         <section className="col-center">
-          <div className="purple-button" onClick={fetchNewLesson}>
-            <img src="/button-desktop.6ff93e26.png" className="purple-bg" alt="Button" />
+          <div className="purple-button" onClick={handleClick}>
+            <img src="/button-desktop.6ff93e26.png" className="purple-bg" alt="Button Background" />
             
             <div className="purple-content">
-              <span className="corner tl">click here<br/>first</span>
-              <span className="corner tr">click here<br/>first</span>
-              <span className="corner bl">click here<br/>first</span>
-              <span className="corner br">click here<br/>first</span>
+              {!wisdom && !spinning ? (
+                <>
+                  <span className="corner tl">click here<br/>first</span>
+                  <span className="corner tr">click here<br/>first</span>
+                  <span className="corner bl">click here<br/>first</span>
+                  <span className="corner br">click here<br/>first</span>
 
-              <div className="center-text">
-                {loading ? (
-                  <h1>Loading...</h1>
-                ) : lesson ? (
-                  <div className="lesson-loaded">
-                    <h1 className="lesson-num">Lesson #{lesson?.id || '?'}</h1>
-                    <h2 className="lesson-txt">{lessonText}</h2>
-                    <div className="share-box">
-                      <span>share with your human friends</span>
-                      <img src="/share-with-friends.161d506d.png" className="share-arrow" alt="arrow" />
-                      <img src="/fb-logo.96f2b976.png" className="social-icon" alt="Facebook" />
-                      <img src="/twitter-logo.ebe3c4fc.png" className="social-icon" alt="Twitter" />
-                    </div>
-                  </div>
-                ) : (
-                  <>
+                  <div className="center-text">
                     <h1>Click Here</h1>
                     <h2>To learn your lesson</h2>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              ) : (
+                <div className="lesson-display">
+                  <h2 style={{ color: '#ffff00', marginBottom: '20px' }}>Lesson #{lessonId}</h2>
+                  <p style={{ color: '#ffffff', fontSize: '1.4rem' }}>{wisdom}</p>
+                  
+                  {!spinning && showShare && (
+                    <div className="share-box" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '30px' }}>
+                      <span style={{ color: '#ffff00', fontFamily: 'monospace' }}>share with your human friends</span>
+                      <img src="/share-with-friends.161d506d.png" style={{ height: '30px' }} alt="arrow" />
+                      <img src="/fb-logo.96f2b976.png" style={{ height: '35px' }} alt="Facebook" />
+                      <img src="/twitter-logo.ebe3c4fc.png" style={{ height: '35px' }} alt="Twitter" />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -103,7 +153,6 @@ function App() {
       </div>
 
       <div id="fire-container"></div>
-
     </div>
   );
 }
