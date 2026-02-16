@@ -156,7 +156,7 @@ useEffect(() => {
         <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">Terms of Service</a>
         <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
         <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">Your California Privacy Rights</a>
-        <a href="https://www.disneyplus.com" target="_blank" rel="noopener noreferrer">About Ads</a>
+        <a href="https://info.evidon.com/pub_info/3920?v=1&nt=0&nw=false" target="_blank" rel="noopener noreferrer">About Ads</a>
       </footer>
     </div>
   );
